@@ -7,8 +7,10 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 print(f"Geladen API Key:{api_key}")
 
+topic = "trump"
+
 url = "https://newsapi.org/v2/everything?" \
-      "q=tesla" \
+      f"q={topic}" \
       "&from=2026-10-25" \
       "&sortBy=publishedAt&" \
       f"apiKey={api_key}"\
@@ -24,12 +26,14 @@ print(content)
 
 # Access the articles title and description
 body = " "
-for article in content["articles"]:
+for article in content["articles"][:20]:
 
     title = article.get("title") or ""
     description = article.get("description") or ""
 
-    body = body + title + "\n" + description + "\n" + article["url"] + 2*"\n"
+    body = "Subject: Today's News" + \
+           "\n" + body + title + "\n" + description \
+           + "\n" + article["url"] + 2*"\n"
 
 body = body.encode("utf-8")
 send_email(body)
